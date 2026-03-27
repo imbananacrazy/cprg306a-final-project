@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUserAuth } from "@/utils/firebase/auth-context";
 
-export default function Dashboard() {
+export default function Nutrition() {
   const router = useRouter();
   const { user, loading } = useUserAuth();
 
@@ -20,19 +20,14 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center bg-[#181d27] h-screen w-screen">
-        <h1 className="text-white">Loading...</h1>
+        <h1>Loading...</h1>
       </div>
     );
   }
 
   return (
     <div className="bg-white h-screen w-screen">
-      <Sidebar page="Dashboard" />
-      <div className="pl-70">
-        <h1 className="text-5xl font-extrabold text-black pl-10 pt-10">
-          Dashboard
-        </h1>
-      </div>
+      <Sidebar page="Nutrition" />
     </div>
   );
 }

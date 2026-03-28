@@ -12,15 +12,15 @@ export default function WelcomeBack() {
       <h1 className="text-3xl font-bold text-white pb-10">
         Welcome back, {user?.displayName}!
       </h1>
-      <div className="flex flex-col justify-center items-center w-120 h-55 rounded-lg bg-[#3A7D44] shadow-lg gap-4">
+      <div className="flex flex-col justify-center items-center gap-4">
         <button
-          className="bg-[#254D32] text-white font-bold w-100 h-15 rounded-lg hover:cursor-pointer hover:bg-[#69B578]"
+          className="bg-[#181d27] border-3 border-[#254D32] hover:border-none text-white font-bold text-lg w-100 h-15 rounded-lg hover:cursor-pointer hover:bg-[#69B578]"
           onClick={() => router.push("/dashboard")}
         >
           View Dashboard
         </button>
         <button
-          className="bg-[#254D32] text-white font-bold w-100 h-15 rounded-lg hover:cursor-pointer hover:bg-[#69B578]"
+          className="bg-[#181d27] border-3 border-[#254D32] hover:border-none text-white font-bold text-lg w-100 h-15 rounded-lg hover:cursor-pointer hover:bg-[#69B578]"
           onClick={() => {
             firebaseSignOut();
           }}

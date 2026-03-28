@@ -36,7 +36,7 @@ export default function ExercisePage() {
   }
 
   return (
-    <div className="h-screen bg-white">
+    <div className="h-screen bg-gradient-to-r from-[#254D32] to-[#3A7D44]">
       <Sidebar page="Search" />
 
       <main className="flex-1 pl-70 pt-10">

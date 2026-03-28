@@ -6,7 +6,7 @@ import { useUserAuth } from "../utils/firebase/auth-context";
 export default function SignInPage() {
   const { googleSignIn, githubSignIn } = useUserAuth();
   return (
-    <div className="flex flex-col gap-4 justify-center items-center">
+    <div className="flex flex-col justify-center items-center gap-4 bg-[#181d27] rounded-lg shadow-[0px_0px_12px_8px_rgba(0,_0,_0,_0.3)] w-110 h-50">
       <button
         className="flex flex-row gap-2 justify-center items-center bg-[#181d27] border-3 border-[#254D32] hover:border-none text-white font-bold text-lg w-100 h-15 rounded-lg hover:cursor-pointer hover:bg-[#69B578]"
         onClick={async () => await googleSignIn()}
@@ -28,9 +28,9 @@ export default function SignInPage() {
           <g
             id="Page-1"
             stroke="none"
-            stroke-width="1"
+            strokeWidth="1"
             fill="none"
-            fill-rule="evenodd"
+            fillRule="evenodd"
           >
             <g
               id="Dribbble-Light-Preview"

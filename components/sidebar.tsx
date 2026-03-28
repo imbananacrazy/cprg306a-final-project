@@ -11,7 +11,7 @@ export default function Sidebar({ page }: { page: string }) {
     "text-white font-bold w-60 h-12 rounded-lg text-left text-lg pl-4 border hover:cursor-pointer hover:bg-[#69B578] hover:border-none flex flex-row gap-2 items-center";
 
   return (
-    <div className="flex flex-col bg-[#181d27] h-screen fixed top-0 left-0 w-70">
+    <div className="flex flex-col bg-[#181d27] fixed top-10 left-10 bottom-10 w-70 shadow-[0px_0px_12px_8px_rgba(0,_0,_0,_0.3)] rounded-lg">
       <div className="flex flex-col items-center justify-center font-bold text-white text-4xl pt-10 mb-10">
         <h1>Healthmax</h1>
         <h1 className="text-[#69B578]">Tracking</h1>

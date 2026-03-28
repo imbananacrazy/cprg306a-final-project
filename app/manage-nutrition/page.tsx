@@ -21,16 +21,18 @@ export default function ExercisePage() {
     );
 
   return (
-    <div className="h-screen bg-white">
-      <Sidebar page="Nutrition" />
+    <div className="h-screen bg-gradient-to-r from-[#254D32] to-[#3A7D44]">
+      <Sidebar page="Manage Nutrition" />
 
       <main className="flex-1 pl-70 pt-10">
-        <div className="h-screen mx-50">
+        <div className="mx-50">
           <div className="flex flex-col gap-2">
             <header>
               <div className="flex flex-col">
-                <h1 className="text-4xl font-black text-black">Nutrition</h1>
-                <p className="text-gray-500 font-medium">
+                <h1 className="text-4xl font-black text-white">
+                  Manage Nutrition
+                </h1>
+                <p className="text-white font-medium">
                   View and manage your nutritional intake.
                 </p>
               </div>

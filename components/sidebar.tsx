@@ -8,7 +8,7 @@ export default function Sidebar({ page }: { page: string }) {
 
   // Base button styles
   const baseButtonStyles =
-    "text-white font-bold w-60 h-12 rounded-lg text-left text-lg pl-4 border hover:cursor-pointer hover:bg-[#69B578] hover:border-none flex flex-row gap-2 items-center";
+    "text-white font-bold w-60 h-12 rounded-lg text-left text-lg pl-4 border hover:cursor-pointer hover:bg-[#69B578] hover:border-none flex flex-row gap-2 items-center transition-all duration-300 ease-in-out";
 
   return (
     <div className="flex flex-col bg-[#181d27] fixed top-10 left-10 bottom-10 w-70 shadow-[0px_0px_12px_8px_rgba(0,_0,_0,_0.3)] rounded-lg">
@@ -21,7 +21,7 @@ export default function Sidebar({ page }: { page: string }) {
           className={`${baseButtonStyles} border-[#69B578] ${
             page === "Dashboard"
               ? "bg-[#69B578] border-none"
-              : "bg-[#181d27] border-[#254D32]"
+              : "bg-[#181d27] border-[#254D32] border-3"
           }`}
           onClick={() => router.push("/dashboard")}
         >
@@ -41,11 +41,36 @@ export default function Sidebar({ page }: { page: string }) {
         </button>
         <button
           className={`${baseButtonStyles} border-[#69B578] ${
-            page === "Nutrition"
+            page === "Search"
+              ? "bg-[#69B578] border-none"
+              : "bg-[#181d27] border-[#254D32] border-3"
+          }`}
+          onClick={() => router.push("/search")}
+        >
+          <svg
+            width="20px"
+            height="20px"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          Search
+        </button>
+        <button
+          className={`${baseButtonStyles} border-[#69B578] ${
+            page === "Manage Nutrition"
               ? "bg-[#69B578] border-none"
               : "bg-[#181d27] border-[#254D32]"
           }`}
-          onClick={() => router.push("/nutrition")}
+          onClick={() => router.push("/manage-nutrition")}
         >
           <svg
             fill="white"
@@ -71,38 +96,13 @@ export default function Sidebar({ page }: { page: string }) {
 	c0.8,0.2,1.6,0.2,2.4-0.3C29.7,15.6,30.2,13.8,29.4,12.4z"
             />
           </svg>
-          Nutrition
-        </button>
-        <button
-          className={`${baseButtonStyles} border-[#69B578] ${
-            page === "Search Exercises"
-              ? "bg-[#69B578] border-none"
-              : "bg-[#181d27] border-[#254D32]"
-          }`}
-          onClick={() => router.push("/search-exercises")}
-        >
-          <svg
-            width="20px"
-            height="20px"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          Search Exercises
+          Manage Nutrition
         </button>
         <button
           className={`${baseButtonStyles} border-[#69B578] ${
             page === "Manage Exercises"
               ? "bg-[#69B578] border-none"
-              : "bg-[#181d27] border-[#254D32]"
+              : "bg-[#181d27] border-[#254D32] border-3"
           }`}
           onClick={() => router.push("/manage-exercises")}
         >
@@ -120,7 +120,7 @@ export default function Sidebar({ page }: { page: string }) {
         </button>
         <div className="mt-auto pb-5">
           <button
-            className={`${baseButtonStyles} border-red-900 hover:bg-red-400 hover:border-none bg-[#181d27]`}
+            className={`${baseButtonStyles} border-red-900 border-3 hover:bg-red-400 hover:border-none bg-[#181d27]`}
             onClick={async () => {
               await firebaseSignOut();
               router.push("/");

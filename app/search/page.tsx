@@ -44,15 +44,15 @@ export default function ExercisePage() {
           <div className="flex flex-col gap-2">
             <header>
               <div className="flex flex-col">
-                <h1 className="text-4xl font-black text-black">Search</h1>
-                <p className="text-gray-500 font-medium">
+                <h1 className="text-4xl font-black text-white">Search</h1>
+                <p className="text-white font-medium">
                   Find food by name and exercises based on muscles or body
                   parts.
                 </p>
               </div>
             </header>
-            <div className="flex flex-row gap-2">
-              <div className="flex-2">
+            <div className="flex flex-row gap-10">
+              <div className="flex-1">
                 <FoodSearch onSearchResults={onFoodSearch} />
                 <div className="bg-[#181d27] p-6 rounded-xl min-h-10">
                   {foods.length > 0 ? (

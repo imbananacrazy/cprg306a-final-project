@@ -18,8 +18,6 @@ export default function ExerciseSearch({
       const response = await fetch(`/api/exercise/search?query=${newQuery}`);
       const result = await response.json();
 
-      console.log(result.data.length);
-
       if (result.data.length > 0) {
         onSearchResults(result.data);
       }
@@ -27,23 +25,35 @@ export default function ExerciseSearch({
       console.error("Error fetching exercises: " + error);
     }
   }
+
+  const baseStyles =
+    "bg-[#181d27] border-1 border-[#254D32] transition-all duration-200 ease-in-out text-white";
+
   return (
     <form
-      className="flex flex-row bg-white rounded-lg gap-2 pb-2"
+      className="flex flex-row bg-transparent rounded-lg gap-2 pb-4"
       onSubmit={handleSubmit}
     >
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search for exercises by muscle or body part (eg. abs, upper arms)"
-        className="w-full text-[#181d27] text-lg p-4 placeholder:text-gray-500 border border-[#254D32] rounded-lg focus:outline-none focus:bg-[#69B578] focus:text-white focus:border-none"
+        placeholder="Search exercises by muscle/body part (eg. abs, upper arms)"
+        className={`w-full text-lg p-4 placeholder:text-gray-500 rounded-lg focus:outline-none ${baseStyles}`}
       />
       <button
-        className="bg-white w-50 text-black p-4 rounded-lg text-lg hover:cursor-pointer focus:outline-none border border-[#254D32] hover:bg-[#69B578] hover:text-white hover:border-none"
         type="submit"
+        className={`px-5 rounded-lg text-lg font-bold hover:bg-[#69B578] hover:cursor-pointer ${baseStyles}`}
       >
-        Search
+        <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
+            stroke={"white"}
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </button>
     </form>
   );

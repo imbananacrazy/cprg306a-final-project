@@ -15,16 +15,16 @@ export default function FoodSearch({
     if (!newQuery) return;
 
     try {
-      const response = await fetch(`/api/exercise/search?query=${newQuery}`);
+      const response = await fetch(`/api/nutrition/search?query=${newQuery}`);
       const result = await response.json();
 
-      console.log(result.data.length);
+      console.log(result.data);
 
       if (result.data.length > 0) {
         onSearchResults(result.data);
       }
     } catch (error) {
-      console.error("Error fetching exercises: " + error);
+      console.error("Error fetching nutrition data: " + error);
     }
   }
 

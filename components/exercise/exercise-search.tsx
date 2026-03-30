@@ -12,12 +12,14 @@ export default function ExerciseSearch({
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const newQuery = query.trim().toLowerCase();
+    //query empty, dont send to route
     if (!newQuery) return;
 
     try {
       const response = await fetch(`/api/exercise/search?query=${newQuery}`);
       const result = await response.json();
 
+      //only display exercises if theres more than 0. its possible to have a valid query but it return 0
       if (result.data.length > 0) {
         onSearchResults(result.data);
       }

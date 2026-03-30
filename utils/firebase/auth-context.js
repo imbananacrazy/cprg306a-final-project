@@ -30,9 +30,9 @@ export const AuthContextProvider = ({ children }) => {
         email: user.email,
         displayName: user.displayName,
         dailyGoals: {
-          calories: 0,
-          protein: 0,
-          water: 0,
+          calories: 1500,
+          protein: 100,
+          water: 2000,
         },
         exerciseSchedule: {
           monday: [],
@@ -43,6 +43,7 @@ export const AuthContextProvider = ({ children }) => {
           saturday: [],
           sunday: [],
         },
+        achievements: [],
         setupComplete: false,
         created: new Date(),
       });

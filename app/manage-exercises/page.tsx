@@ -1,7 +1,7 @@
 "use client";
 
 import Sidebar from "@/components/sidebar";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUserAuth } from "@/utils/firebase/auth-context";
 
@@ -9,6 +9,7 @@ export default function ExercisePage() {
   const router = useRouter();
   const { user, loading } = useUserAuth();
 
+  //if not signed in, redirect to landing page
   useEffect(() => {
     if (!loading && !user) router.push("/");
   }, [user, loading, router]);
@@ -23,7 +24,6 @@ export default function ExercisePage() {
   return (
     <div className="h-screen bg-gradient-to-r from-[#254D32] to-[#3A7D44]">
       <Sidebar page="Manage Exercises" />
-
       <main className="flex-1 pl-70 pt-10">
         <div className="mx-50">
           <div className="flex flex-col gap-2">

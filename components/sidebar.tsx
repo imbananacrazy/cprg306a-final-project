@@ -6,7 +6,6 @@ export default function Sidebar({ page }: { page: string }) {
   const router = useRouter();
   const { firebaseSignOut } = useUserAuth();
 
-  // Base button styles
   const baseButtonStyles =
     "text-white font-bold w-60 h-12 rounded-lg text-left text-lg pl-4 border hover:cursor-pointer hover:bg-[#69B578] hover:border-none flex flex-row gap-2 items-center transition-all duration-300 ease-in-out";
 

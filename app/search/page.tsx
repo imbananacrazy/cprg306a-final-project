@@ -12,10 +12,10 @@ import SearchedFood from "@/components/nutrition/searched-food";
 export default function ExercisePage() {
   const router = useRouter();
   const { user, loading } = useUserAuth();
-
   const [exercises, setExercises] = useState<any[]>([]);
   const [foods, setFoods] = useState<any[]>([]);
 
+  //if not signed in, redirect to landing page
   useEffect(() => {
     if (!loading && !user) router.push("/");
   }, [user, loading, router]);
@@ -38,7 +38,6 @@ export default function ExercisePage() {
   return (
     <div className="h-screen bg-gradient-to-r from-[#254D32] to-[#3A7D44]">
       <Sidebar page="Search" />
-
       <main className="flex-1 pl-70 pt-10">
         <div className="mx-50">
           <div className="flex flex-col gap-2">

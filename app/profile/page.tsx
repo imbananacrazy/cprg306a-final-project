@@ -14,10 +14,13 @@ export default function ExercisePage() {
   const [calories, setCalories] = useState<number>(0);
   const [protein, setProtein] = useState(0);
   const [water, setWater] = useState(0);
+  const [achievements, setAchievements] = useState<string[]>([]);
 
+  //if not signed in, redirect to landing page
   useEffect(() => {
     if (!loading && !user) router.push("/");
 
+    //fetch data from "users" collection in firestore
     async function fetchData() {
       if (user?.uid) {
         const userData = await getDoc(doc(db, "users", user.uid));
@@ -27,12 +30,14 @@ export default function ExercisePage() {
           setCalories(data.dailyGoals.calories || 0);
           setProtein(data.dailyGoals.protein || 0);
           setWater(data.dailyGoals.water || 0);
+          setAchievements(data.achievements || []);
         }
       }
     }
     fetchData();
   }, [user, loading, router]);
 
+  //update the data in firestore "users" collection using values from the inputs in the form
   async function saveChanges() {
     if (user?.uid) {
       await updateDoc(doc(db, "users", user.uid), {
@@ -64,7 +69,6 @@ export default function ExercisePage() {
   return (
     <div className="h-screen bg-gradient-to-r from-[#254D32] to-[#3A7D44]">
       <Sidebar page="Profile" />
-
       <main className="flex-1 pl-70 pt-10">
         <div className="mx-50">
           <div className="flex flex-col gap-2">
@@ -113,7 +117,7 @@ export default function ExercisePage() {
                 className={`w-full text-lg p-4 placeholder:text-gray-500 rounded-lg focus:outline-none ${baseStyles}`}
               />
               <h1 className="text-xl font-bold text-white">
-                Daily Water Intake (mL)
+                Daily Water Intake (ml)
               </h1>
               <input
                 type="number"

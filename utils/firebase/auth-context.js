@@ -8,7 +8,8 @@ import {
   GoogleAuthProvider,
   GithubAuthProvider,
 } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 const AuthContext = createContext();
 
@@ -16,14 +17,58 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const googleSignIn = () => {
+  async function createUserDocument(user) {
+    if (!user) return;
+
+    const userRef = doc(db, "users", user.uid);
+
+    // Add user to users table and create default data if user doesn't exist
+    const userDoc = await getDoc(userRef);
+    if (!userDoc.exists()) {
+      await setDoc(userRef, {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        dailyGoals: {
+          calories: 0,
+          protein: 0,
+          water: 0,
+        },
+        exerciseSchedule: {
+          monday: [],
+          tuesday: [],
+          wednesday: [],
+          thursday: [],
+          friday: [],
+          saturday: [],
+          sunday: [],
+        },
+        setupComplete: false,
+        created: new Date(),
+      });
+    }
+  }
+
+  const googleSignIn = async () => {
     const provider = new GoogleAuthProvider();
-    return signInWithPopup(auth, provider);
+    try {
+      const result = await signInWithPopup(auth, provider);
+      await createUserDocument(result.user);
+      return result;
+    } catch (error) {
+      console.error("Google Sign In Error:", error);
+    }
   };
 
-  const githubSignIn = () => {
+  const githubSignIn = async () => {
     const provider = new GithubAuthProvider();
-    return signInWithPopup(auth, provider);
+    try {
+      const result = await signInWithPopup(auth, provider);
+      await createUserDocument(result.user);
+      return result;
+    } catch (error) {
+      console.error("Github Sign In Error:", error);
+    }
   };
 
   const firebaseSignOut = () => {
@@ -36,14 +81,13 @@ export const AuthContextProvider = ({ children }) => {
       setLoading(false);
     });
     return () => unsubscribe();
-  }, [user]);
+  }, []); // Removed [user] from dependency to avoid unnecessary re-runs
 
   return (
     <AuthContext.Provider
       value={{
         user,
         loading,
-
         googleSignIn,
         githubSignIn,
         firebaseSignOut,

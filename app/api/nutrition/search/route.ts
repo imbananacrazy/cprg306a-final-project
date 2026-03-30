@@ -5,12 +5,6 @@ export async function GET(request: Request) {
   const query = searchParams.get("query");
   const apiKey = process.env.NUTRITION_API_KEY;
 
-  console.log("Server received query: " + query);
-
-  if (!query) {
-    return NextResponse.json({ success: false, data: [] });
-  }
-
   try {
     const response = await fetch(
       `https://api.calorieninjas.com/v1/nutrition?query=${query}`,

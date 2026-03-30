@@ -41,6 +41,44 @@ export default function Sidebar({ page }: { page: string }) {
         </button>
         <button
           className={`${baseButtonStyles} border-[#69B578] ${
+            page === "Profile"
+              ? "bg-[#69B578] border-none"
+              : "bg-[#181d27] border-[#254D32] border-3"
+          }`}
+          onClick={() => router.push("/profile")}
+        >
+          <svg
+            width="20px"
+            height="20px"
+            viewBox="0 0 20 20"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              id="Page-1"
+              stroke="white"
+              strokeWidth="1"
+              fill="none"
+              fillRule="evenodd"
+            >
+              <g
+                id="Dribbble-Light-Preview"
+                transform="translate(-180.000000, -2159.000000)"
+                fill="white"
+              >
+                <g id="icons" transform="translate(56.000000, 160.000000)">
+                  <path
+                    d="M134,2008.99998 C131.783496,2008.99998 129.980955,2007.20598 129.980955,2004.99998 C129.980955,2002.79398 131.783496,2000.99998 134,2000.99998 C136.216504,2000.99998 138.019045,2002.79398 138.019045,2004.99998 C138.019045,2007.20598 136.216504,2008.99998 134,2008.99998 M137.775893,2009.67298 C139.370449,2008.39598 140.299854,2006.33098 139.958235,2004.06998 C139.561354,2001.44698 137.368965,1999.34798 134.722423,1999.04198 C131.070116,1998.61898 127.971432,2001.44898 127.971432,2004.99998 C127.971432,2006.88998 128.851603,2008.57398 130.224107,2009.67298 C126.852128,2010.93398 124.390463,2013.89498 124.004634,2017.89098 C123.948368,2018.48198 124.411563,2018.99998 125.008391,2018.99998 C125.519814,2018.99998 125.955881,2018.61598 126.001095,2018.10898 C126.404004,2013.64598 129.837274,2010.99998 134,2010.99998 C138.162726,2010.99998 141.595996,2013.64598 141.998905,2018.10898 C142.044119,2018.61598 142.480186,2018.99998 142.991609,2018.99998 C143.588437,2018.99998 144.051632,2018.48198 143.995366,2017.89098 C143.609537,2013.89498 141.147872,2010.93398 137.775893,2009.67298"
+                    id="profile-[#1341]"
+                  ></path>
+                </g>
+              </g>
+            </g>
+          </svg>
+          Profile
+        </button>
+        <button
+          className={`${baseButtonStyles} border-[#69B578] ${
             page === "Search"
               ? "bg-[#69B578] border-none"
               : "bg-[#181d27] border-[#254D32] border-3"
@@ -57,7 +95,7 @@ export default function Sidebar({ page }: { page: string }) {
             <path
               d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
               stroke="white"
-              strokeWidth="2"
+              strokeWidth="3.5"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -68,7 +106,7 @@ export default function Sidebar({ page }: { page: string }) {
           className={`${baseButtonStyles} border-[#69B578] ${
             page === "Manage Nutrition"
               ? "bg-[#69B578] border-none"
-              : "bg-[#181d27] border-[#254D32]"
+              : "bg-[#181d27] border-[#254D32] border-3"
           }`}
           onClick={() => router.push("/manage-nutrition")}
         >

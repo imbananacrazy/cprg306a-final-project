@@ -4,13 +4,8 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query");
 
-  console.log("Server received query: " + query);
-
-  if (!query) {
-    return NextResponse.json({ success: false, data: [] });
-  }
-
   try {
+    //try for search by muscle first. if failed, try for search by body part.
     const muscleResult = await fetch(
       `https://exercisedb.dev/api/v1/muscles/${query}/exercises`,
     );

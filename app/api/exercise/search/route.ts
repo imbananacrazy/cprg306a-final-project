@@ -4,6 +4,10 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query");
 
+  if (!query) {
+    return NextResponse.json({ success: false, data: [] });
+  }
+
   try {
     //try for search by muscle first. if failed, try for search by body part.
     const muscleResult = await fetch(

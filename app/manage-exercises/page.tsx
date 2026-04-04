@@ -1,17 +1,52 @@
 "use client";
 
 import Sidebar from "@/components/sidebar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUserAuth } from "@/utils/firebase/auth-context";
+import ExerciseCard from "@/components/exercise/exercise-card";
+import { db } from "@/utils/firebase/firebase";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+
+interface Exercise {
+  name: string;
+  targetMuscles: string[];
+  equipments: string[];
+}
 
 export default function ExercisePage() {
   const router = useRouter();
   const { user, loading } = useUserAuth();
 
+  //exercises stored in the days of the week are the exercise IDs
+  const [mondayIDs, setMondayIDs] = useState<string[]>([]);
+  const [tuesdayIDs, setTuesdayIDs] = useState<string[]>([]);
+  const [wednesdayIDs, setWednesdayIDs] = useState<string[]>([]);
+  const [thursdayIDs, setThursdayIDs] = useState<string[]>([]);
+  const [fridayIDs, setFridayIDs] = useState<string[]>([]);
+  const [saturdayIDs, setSaturdayIDs] = useState<string[]>([]);
+  const [sundayIDs, setSundayIDs] = useState<string[]>([]);
+
   //if not signed in, redirect to landing page
   useEffect(() => {
     if (!loading && !user) router.push("/");
+
+    async function fetchData() {
+      if (user?.uid) {
+        const userData = await getDoc(doc(db, "users", user.uid));
+        if (userData.exists()) {
+          const data = userData.data();
+          setMondayIDs(data.exerciseSchedule?.monday || []);
+          setTuesdayIDs(data.exerciseSchedule?.tuesday || []);
+          setWednesdayIDs(data.exerciseSchedule?.wednesday || []);
+          setThursdayIDs(data.exerciseSchedule?.thursday || []);
+          setFridayIDs(data.exerciseSchedule?.friday || []);
+          setSaturdayIDs(data.exerciseSchedule?.saturday || []);
+          setSundayIDs(data.exerciseSchedule?.sunday || []);
+        }
+      }
+    }
+    fetchData();
   }, [user, loading, router]);
 
   if (loading)

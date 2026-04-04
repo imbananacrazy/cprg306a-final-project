@@ -8,12 +8,16 @@ import ExerciseSearch from "@/components/exercise/exercise-search";
 import SearchedExercise from "@/components/exercise/searched-exercise";
 import FoodSearch from "@/components/nutrition/food-search";
 import SearchedFood from "@/components/nutrition/searched-food";
+import AddExercise from "@/components/exercise/add-exercise";
 
 export default function ExercisePage() {
   const router = useRouter();
   const { user, loading } = useUserAuth();
   const [exercises, setExercises] = useState<any[]>([]);
   const [foods, setFoods] = useState<any[]>([]);
+  const [exerciseButtonClicked, setExerciseButtonClicked] = useState<
+    string | null
+  >(null);
 
   //if not signed in, redirect to landing page
   useEffect(() => {
@@ -35,6 +39,10 @@ export default function ExercisePage() {
     setFoods(foods);
   }
 
+  function handleExerciseClick(id: string) {
+    setExerciseButtonClicked(id);
+  }
+
   return (
     <div className="h-screen bg-gradient-to-r from-[#254D32] to-[#3A7D44]">
       <Sidebar page="Search" />
@@ -50,60 +58,69 @@ export default function ExercisePage() {
                 </p>
               </div>
             </header>
-            <div className="flex flex-row gap-10">
-              <div className="flex-1">
-                <FoodSearch onSearchResults={onFoodSearch} />
-                <div className="bg-[#181d27] p-6 rounded-xl min-h-10">
-                  {foods.length > 0 ? (
-                    <div className="grid gap-4 max-h-[740px] overflow-y-auto pr-2 custom-scrollbar">
-                      {foods.map((food, index) => (
-                        <SearchedFood
-                          key={index}
-                          name={food.name}
-                          calories={food.calories}
-                          serving_size_g={food.serving_size_g}
-                          fat_total_g={food.fat_total_g}
-                          protein_g={food.protein_g}
-                          sodium_mg={food.sodium_mg}
-                          carbohydrates_total_g={food.carbohydrates_total_g}
-                          fiber_g={food.fiber_g}
-                          sugar_g={food.sugar_g}
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center">
-                      <p className="text-white font-bold">
-                        Search for valid food to get nutrition information.
-                      </p>
-                    </div>
-                  )}
+            {!exerciseButtonClicked ? (
+              <div className="flex flex-row gap-10">
+                <div className="flex-1">
+                  <FoodSearch onSearchResults={onFoodSearch} />
+                  <div className="bg-[#181d27] p-6 rounded-xl min-h-10">
+                    {foods.length > 0 ? (
+                      <div className="grid gap-4 max-h-[740px] overflow-y-auto pr-2 custom-scrollbar">
+                        {foods.map((food, index) => (
+                          <SearchedFood
+                            key={index}
+                            name={food.name}
+                            calories={food.calories}
+                            serving_size_g={food.serving_size_g}
+                            fat_total_g={food.fat_total_g}
+                            protein_g={food.protein_g}
+                            sodium_mg={food.sodium_mg}
+                            carbohydrates_total_g={food.carbohydrates_total_g}
+                            fiber_g={food.fiber_g}
+                            sugar_g={food.sugar_g}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <p className="text-white font-bold">
+                          Search for valid food to get nutrition information.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <ExerciseSearch onSearchResults={onExercisesSearch} />
+                  <div className="bg-[#181d27] p-6 rounded-xl min-h-10">
+                    {exercises.length > 0 ? (
+                      <div className="grid gap-4 max-h-[740px] overflow-y-auto pr-2 custom-scrollbar">
+                        {exercises.map((exercise, index) => (
+                          <SearchedExercise
+                            key={index}
+                            id={exercise.exerciseId}
+                            name={exercise.name}
+                            targetMuscles={exercise.targetMuscles}
+                            equipment={exercise.equipments}
+                            handleOnClick={() =>
+                              handleExerciseClick(exercise.exerciseId)
+                            }
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <p className="text-white font-bold">
+                          Search for valid muscles or body parts to get
+                          exercises.
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-              <div className="flex-1">
-                <ExerciseSearch onSearchResults={onExercisesSearch} />
-                <div className="bg-[#181d27] p-6 rounded-xl min-h-10">
-                  {exercises.length > 0 ? (
-                    <div className="grid gap-4 max-h-[740px] overflow-y-auto pr-2 custom-scrollbar">
-                      {exercises.map((exercise, index) => (
-                        <SearchedExercise
-                          key={exercise.exerciseId}
-                          name={exercise.name}
-                          targetMuscles={exercise.targetMuscles}
-                          equipment={exercise.equipments}
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center">
-                      <p className="text-white font-bold">
-                        Search for valid muscles or body parts to get exercises.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+            ) : (
+              <AddExercise id={exerciseButtonClicked} />
+            )}
           </div>
         </div>
       </main>

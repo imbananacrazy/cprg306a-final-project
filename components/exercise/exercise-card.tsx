@@ -1,27 +1,34 @@
+import { useState } from "react";
+
 interface Props {
-  id: string;
   name: string;
   targetMuscles: string[];
-  equipment: string[];
-  handleOnClick: () => void;
+  equipments: string[];
 }
 
-export default function SearchedExercise({
-  id,
+export default function ExerciseCard({
   name,
   targetMuscles,
-  equipment,
-  handleOnClick,
+  equipments,
 }: Props) {
+  const [hovered, setHovered] = useState(false);
+
   return (
     <button
-      className="group w-full bg-white border-[#254D32] p-5 rounded-lg flex flex-col gap-4 border transition-all hover:cursor-pointer hover:bg-[#69B578] text-black hover:text-white hover:border-transparent active:scale-[0.99]"
-      onClick={handleOnClick}
+      className="group w-full bg-white border-[#254D32] p-5 rounded-lg flex flex-col gap-4 border transition-all hover:cursor-pointer hover:bg-red-400 text-black hover:border-transparent active:scale-[0.99]"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       <div className="flex justify-between items-start w-full">
-        <h1 className="text-start text-xl font-bold capitalize group-hover:text-white transition-colors">
-          {name}
-        </h1>
+        {hovered ? (
+          <h1 className="text-start text-xl font-bold capitalize">
+            Click to remove
+          </h1>
+        ) : (
+          <h1 className="text-start text-xl font-bold capitalize group-hover:text-white transition-colors">
+            {name}
+          </h1>
+        )}
       </div>
 
       <div className="flex flex-row justify-end gap-2 flex-wrap mt-auto">
@@ -34,7 +41,7 @@ export default function SearchedExercise({
           </div>
         ))}
 
-        {equipment.map((item) => (
+        {equipments.map((item) => (
           <div
             key={item}
             className="text-xs font-bold capitalize bg-gray-50 text-gray-500 px-2 py-1 rounded-md border border-gray-200 group-hover:bg-gray-700 group-hover:text-white group-hover:border-gray-600 transition-all"

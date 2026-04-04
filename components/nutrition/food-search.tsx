@@ -24,7 +24,7 @@ export default function FoodSearch({
         onSearchResults(result.data);
       }
     } catch (error) {
-      console.error("Error fetching nutrition data: " + error);
+      console.error("Error: " + error);
     }
   }
 

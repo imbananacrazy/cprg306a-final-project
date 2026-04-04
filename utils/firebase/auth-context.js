@@ -43,6 +43,7 @@ export const AuthContextProvider = ({ children }) => {
           saturday: [],
           sunday: [],
         },
+        food: [],
         achievements: [],
         setupComplete: false,
         created: new Date(),

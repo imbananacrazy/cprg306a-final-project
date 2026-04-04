@@ -31,7 +31,7 @@ export default function ExercisePage() {
   useEffect(() => {
     if (!loading && !user) router.push("/");
 
-    async function fetchData() {
+    async function fetchExercises() {
       if (user?.uid) {
         const userData = await getDoc(doc(db, "users", user.uid));
         if (userData.exists()) {
@@ -46,7 +46,7 @@ export default function ExercisePage() {
         }
       }
     }
-    fetchData();
+    fetchExercises();
   }, [user, loading, router]);
 
   if (loading)

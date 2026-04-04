@@ -11,13 +11,13 @@ export async function GET(request: Request) {
   try {
     //try for search by muscle first. if failed, try for search by body part.
     const muscleResult = await fetch(
-      `https://exercisedb.dev/api/v1/muscles/${query}/exercises`,
+      `https://exercisedb.dev/api/v1/muscles/${query}/exercises`, //calls muscles api url based on query, returns list of exercises
     );
     const muscleData = await muscleResult.json();
 
     if (!muscleData.success || muscleData.data.length === 0) {
       const bodyPartResult = await fetch(
-        `https://exercisedb.dev/api/v1/bodyparts/${query}/exercises`,
+        `https://exercisedb.dev/api/v1/bodyparts/${query}/exercises`, //calls body parts api url based on query, returns list of exercises
       );
       const bodyPartData = await bodyPartResult.json();
       return NextResponse.json(bodyPartData);

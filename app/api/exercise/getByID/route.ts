@@ -10,7 +10,7 @@ export async function GET(request: Request) {
 
   try {
     const response = await fetch(
-      `https://exercisedb.dev/api/v1/exercises/${id}`,
+      `https://exercisedb.dev/api/v1/exercises/${id}`, //returns exercises using id
     );
     const data = await response.json();
 

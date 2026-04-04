@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+//all these datatypes are here because food api doesn't have ids for each food,
+// so this keeps track exactly the food and all its data
 interface Props {
   name: string;
   calories: number;
@@ -13,10 +15,9 @@ interface Props {
   carbohydrates_total_g: number;
   fiber_g: number;
   sugar_g: number;
-  handleOnClick: () => void;
 }
 
-export default function SearchedFood({
+export default function FoodCard({
   name,
   calories,
   serving_size_g,
@@ -29,13 +30,11 @@ export default function SearchedFood({
   carbohydrates_total_g,
   fiber_g,
   sugar_g,
-  handleOnClick,
 }: Props) {
   const [hovered, setHovered] = useState(false);
   return (
     <button
-      className="group relative bg-white border-[#254D32] p-5 rounded-lg flex flex-col gap-3 border hover:cursor-pointer hover:bg-[#69B578] hover:text-white hover:border-transparent transition-all w-full overflow-hidden"
-      onClick={handleOnClick}
+      className="group relative bg-white border-[#254D32] p-5 rounded-lg flex flex-col gap-3 border hover:cursor-pointer hover:bg-red-400 hover:text-white hover:border-transparent transition-all w-full overflow-hidden"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -76,7 +75,7 @@ export default function SearchedFood({
         className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${hovered ? "opacity-100" : "opacity-0"}`}
       >
         <h1 className="text-xl font-bold capitalize text-white">
-          CLICK TO ADD
+          CLICK TO REMOVE
         </h1>
       </div>
     </button>

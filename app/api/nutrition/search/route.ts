@@ -7,7 +7,7 @@ export async function GET(request: Request) {
 
   try {
     const response = await fetch(
-      `https://api.calorieninjas.com/v1/nutrition?query=${query}`,
+      `https://api.calorieninjas.com/v1/nutrition?query=${query}`, //calls this api url using query
       {
         method: "GET",
         headers: {

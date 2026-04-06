@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+//api provides all information. all these datatypes are here because food api doesn't have ids for each food,
+//so this keeps track exactly the food and all its data. this card will be shown in the "Search" page.
 interface Props {
   name: string;
   calories: number;

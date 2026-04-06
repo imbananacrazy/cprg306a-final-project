@@ -14,6 +14,8 @@ export default function ExercisePage() {
     if (!loading && !user) router.push("/");
   }, [user, loading, router]);
 
+  //if page is loading (usually really quick), say that its loading. otherwise if not loading and user is
+  //signed in, load the dashboard page.
   if (loading)
     return (
       <div className="bg-[#111827] h-screen w-full flex items-center justify-center text-white">

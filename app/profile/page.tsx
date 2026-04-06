@@ -38,6 +38,12 @@ export default function ExercisePage() {
   }, [user, loading, router]);
 
   //update the data in firestore "users" collection using values from the inputs in the form
+  //
+  //flow is like this: users -> user (randomly jumbled characters) -> displayName, dailyGoals
+  //dailyGoals:
+  //  calories
+  //  protein
+  //  water
   async function saveChanges() {
     if (user?.uid) {
       await updateDoc(doc(db, "users", user.uid), {
@@ -51,6 +57,8 @@ export default function ExercisePage() {
     }
   }
 
+  //if page is loading (usually really quick), say that its loading. otherwise if not loading and user is
+  //signed in, load the manage profile page.
   if (loading)
     return (
       <div className="bg-[#111827] h-screen w-full flex items-center justify-center text-white">
@@ -58,6 +66,7 @@ export default function ExercisePage() {
       </div>
     );
 
+  //function after user presses "Save Changes". calls the saveChanges function located above.
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     saveChanges();

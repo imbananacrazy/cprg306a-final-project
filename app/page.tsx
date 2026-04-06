@@ -6,6 +6,9 @@ import SignInPage from "@/components/sign-in";
 import { useUserAuth } from "@/utils/firebase/auth-context";
 import WelcomeBack from "@/components/welcome-back";
 
+//the main landing page. checks if user is signed in and uses that show either the welcome back component or sign in component.
+//
+//uses svgs for icons. in summary, svg are just images that allow you to change the the colour and fill.
 export default function Landing() {
   const { user } = useUserAuth();
 

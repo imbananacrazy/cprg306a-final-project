@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 
+//this is the search bar for searching exercises. it lets users type in a muscle and it returns back a list of exercises using the api.
+//it uses an api route to ensure our api key is protected and is never exposed.
+//
+//uses svgs for icons. in summary, svg are just images that allow you to change the the colour and fill.
 export default function ExerciseSearch({
   onSearchResults,
 }: {
@@ -11,17 +15,42 @@ export default function ExerciseSearch({
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const newQuery = query.trim().toLowerCase();
-    //query empty, dont send to route
+    let newQuery = query.trim().toLowerCase();
     if (!newQuery) return;
 
     try {
+      //check if the user searched for "back"
+      if (newQuery === "back") {
+        const [lowRes, midRes] = await Promise.all([
+          //fetch both lower_back and middle_back
+          fetch(`/api/exercise/search?query=lower_back`),
+          fetch(`/api/exercise/search?query=middle_back`),
+        ]);
+
+        const lowData = await lowRes.json();
+        const midData = await midRes.json();
+
+        //merge the 2 pieces of data
+        const combined = [...lowData, ...midData];
+
+        //only display exercises if theres more than 0. its possible to have a valid query but it return 0
+        if (combined.length > 0) {
+          onSearchResults(combined);
+        } else {
+          onSearchResults([]);
+        }
+        return;
+      }
+
+      //if user didn't search specifically for "back"
       const response = await fetch(`/api/exercise/search?query=${newQuery}`);
       const result = await response.json();
 
       //only display exercises if theres more than 0. its possible to have a valid query but it return 0
-      if (result.data.length > 0) {
-        onSearchResults(result.data);
+      if (result.length > 0) {
+        onSearchResults(result);
+      } else {
+        onSearchResults([]);
       }
     } catch (error) {
       console.error("Error fetching exercises: " + error);
@@ -40,7 +69,7 @@ export default function ExerciseSearch({
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search exercises by muscle/body part (eg. abs, upper arms)"
+        placeholder="Search exercises by muscle (eg. biceps)"
         className={`w-full text-lg p-4 placeholder:text-gray-500 rounded-lg focus:outline-none ${baseStyles}`}
       />
       <button

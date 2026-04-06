@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 
+//this is the search bar for searching food. it lets users type in a food and it returns back a list of food items using the api.
+//it uses an api route to ensure our api key is protected and is never exposed.
+//
+//uses svgs for icons. in summary, svg are just images that allow you to change the the colour and fill.
 export default function FoodSearch({
   onSearchResults,
 }: {
@@ -22,6 +26,8 @@ export default function FoodSearch({
       //only display food if theres more than 0. its possible to have a valid query but it return 0
       if (result.data.length > 0) {
         onSearchResults(result.data);
+      } else {
+        onSearchResults([]);
       }
     } catch (error) {
       console.error("Error: " + error);
@@ -40,7 +46,7 @@ export default function FoodSearch({
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search food by name (eg. banana)"
+        placeholder="Search food by name (eg. 2 apples)"
         className={`w-full text-lg p-4 placeholder:text-gray-500 rounded-lg focus:outline-none ${baseStyles}`}
       />
       <button

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Urbanist } from "next/font/google";
-import "./globals.css";
 import { AuthContextProvider } from "@/utils/firebase/auth-context";
+import "../public/styles/globals.css";
 
 const urbanist = Urbanist();
 

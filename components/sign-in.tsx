@@ -3,19 +3,22 @@
 import Image from "next/image";
 import { useUserAuth } from "../utils/firebase/auth-context";
 
+//the sign in component that gets displayed onto the "/" page if the user isn't sign in.
+//
+//uses svgs for icons. in summary, svg are just images that allow you to change the the colour and fill.
 export default function SignInPage() {
   const { googleSignIn, githubSignIn } = useUserAuth();
   return (
     <div className="flex flex-col justify-center items-center gap-4 bg-[#181d27] rounded-lg shadow-[0px_0px_12px_8px_rgba(0,_0,_0,_0.3)] w-110 h-50">
       <button
-        className="flex flex-row gap-2 justify-center items-center bg-[#181d27] border-3 border-[#254D32] hover:border-none text-white font-bold text-lg w-100 h-15 rounded-lg hover:cursor-pointer hover:bg-[#69B578]"
+        className="flex flex-row gap-2 justify-center items-center bg-[#181d27] border-3 border-[#254D32] hover:border-none text-white font-bold text-lg w-100 h-15 rounded-lg hover:cursor-pointer hover:bg-[#69B578] transition-all duration-200 ease-in-out"
         onClick={async () => await googleSignIn()}
       >
         <Image src="/google.png" alt="Google Icon" width={25} height={25} />
         Sign In with Google
       </button>
       <button
-        className="flex flex-row gap-2 justify-center items-center bg-[#181d27] border-3 border-[#254D32] hover:border-none text-white font-bold text-lg w-100 h-15 rounded-lg hover:cursor-pointer hover:bg-[#69B578]"
+        className="flex flex-row gap-2 justify-center items-center bg-[#181d27] border-3 border-[#254D32] hover:border-none text-white font-bold text-lg w-100 h-15 rounded-lg hover:cursor-pointer hover:bg-[#69B578] transition-all duration-200 ease-in-out"
         onClick={async () => await githubSignIn()}
       >
         <svg

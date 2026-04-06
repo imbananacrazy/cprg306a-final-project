@@ -32,12 +32,13 @@ export default function ExercisePage() {
   useEffect(() => {
     if (!loading && !user) router.push("/");
 
-    //fetch all foods from food collection in users collection (food is an array of maps that hold all food data)
+    //fetch all foods from food field in "users" collection (food is an array of maps that hold all food data)
     //ex:
     //    0:
-    //    name: "banana"
-    //    calories: 123
-    //    ...rest of data
+    //      name: "banana"
+    //      calories: 123
+    //      etc..
+    //    etc...
     async function fetchFood() {
       if (user?.uid) {
         const userData = await getDoc(doc(db, "users", user.uid));
@@ -50,6 +51,8 @@ export default function ExercisePage() {
     fetchFood();
   }, [user, loading, router]);
 
+  //if page is loading (usually really quick), say that its loading. otherwise if not loading and user is
+  //signed in, load the manage nutrition page.
   if (loading)
     return (
       <div className="bg-[#111827] h-screen w-full flex items-center justify-center text-white">

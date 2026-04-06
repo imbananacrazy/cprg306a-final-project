@@ -2,12 +2,19 @@
 import { useRouter } from "next/navigation";
 import { useUserAuth } from "@/utils/firebase/auth-context";
 
+//the main side bar. visible on all pages excluding sign in/landing.
+//
+//uses svgs for icons. in summary, svg are just images that allow you to change the the colour and fill.
+//
+//allows the user to switch between pages. it uses routing navigation, "pushing" the new page onto the user.
+//each button checks what page the user is on and uses that to determined
+//if the button should have "pressed" styling (good for visual feedback, not the best way of doing it). user can also sign out here.
 export default function Sidebar({ page }: { page: string }) {
   const router = useRouter();
   const { firebaseSignOut } = useUserAuth();
 
   const baseButtonStyles =
-    "text-white font-bold w-60 h-12 rounded-lg text-left text-lg pl-4 border hover:cursor-pointer hover:bg-[#69B578] hover:border-none flex flex-row gap-2 items-center transition-all duration-300 ease-in-out";
+    "text-white font-bold w-60 h-12 rounded-lg text-left text-lg pl-4 hover:cursor-pointer hover:bg-[#69B578] hover:border-none flex flex-row gap-2 items-center transition-all duration-200";
 
   return (
     <div className="flex flex-col bg-[#181d27] fixed top-10 left-10 bottom-10 w-70 shadow-[0px_0px_12px_8px_rgba(0,_0,_0,_0.3)] rounded-lg">

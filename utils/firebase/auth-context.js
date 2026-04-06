@@ -1,5 +1,6 @@
 "use client";
 
+//taken and edited from one of our in class assignments (solaakinbode.com)
 import { useContext, createContext, useState, useEffect } from "react";
 import {
   signInWithPopup,
@@ -22,7 +23,8 @@ export const AuthContextProvider = ({ children }) => {
 
     const userRef = doc(db, "users", user.uid);
 
-    // Add user to users table and create default data if user doesn't exist
+    // Add user to "users" collection and create default data if user doesn't exist.
+    // default data includes daily goals, achievements, food (their food data for the day), and their exercise schedule.
     const userDoc = await getDoc(userRef);
     if (!userDoc.exists()) {
       await setDoc(userRef, {
@@ -80,10 +82,11 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      //set isloading to false when firebase sends back auth status (signed in or not)
       setLoading(false);
     });
     return () => unsubscribe();
-  }, []); // Removed [user] from dependency to avoid unnecessary re-runs
+  }, []);
 
   return (
     <AuthContext.Provider

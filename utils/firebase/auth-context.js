@@ -49,6 +49,11 @@ export const AuthContextProvider = ({ children }) => {
         achievements: [],
         setupComplete: false,
         created: new Date(),
+        // Streak tracking
+        streak: 0,
+        lastLoggedDate: "",
+        // Water logging: stores today's date + amount so it resets each day
+        waterLog: { date: "", amount: 0 },
       });
     }
   }

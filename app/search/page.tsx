@@ -143,37 +143,47 @@ export default function ExercisePage() {
     }
   }
 
-  //called after user presses a "searched-food" component. in the "users" collection, each user holds a "food" array. add the clicked
-  //food information to it.
-  //
-  //flow is like this: users -> user (randomly jumbled characters) -> food
+  //called after user presses the add button on a food card. saves to firestore and updates streak
   async function handleFoodClick(food: FoodData) {
-    if (user?.uid) {
-      try {
-        const userData = await getDoc(doc(db, "users", user.uid));
-        if (userData.exists()) {
-          const data = userData.data();
-          const existingFood = data.food || [];
+    if (!user?.uid) return;
+    try {
+      const userData = await getDoc(doc(db, "users", user.uid));
+      if (!userData.exists()) return;
 
-          //create new entry using food data and adding time it was added (good for sorting)
-          const newEntry = {
-            ...food,
-            addedAt: new Date().toISOString(),
-          };
+      const data = userData.data();
+      const existingFood = data.food || [];
 
-          //add the new entry to the existing entries
-          await updateDoc(doc(db, "users", user.uid), {
-            food: [...existingFood, newEntry],
-          });
-        }
-      } catch (error) {
-        console.error("Error: ", error);
+      //stamp with current time so we can filter by date later
+      const newEntry = { ...food, addedAt: new Date().toISOString() };
+
+      //streak logic. compare datstrings to keep it simple
+      const today = new Date().toDateString();
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+      const lastLogged = data.lastLoggedDate || "";
+      let newStreak = data.streak || 0;
+
+      if (lastLogged === today) {
+        //already logged today so dont change streak
+      } else if (lastLogged === yesterday) {
+        //logged yesterday so keep it going
+        newStreak = newStreak + 1;
+      } else {
+        //missed a day so reset to 1
+        newStreak = 1;
       }
+
+      await updateDoc(doc(db, "users", user.uid), {
+        food: [...existingFood, newEntry],
+        streak: newStreak,
+        lastLoggedDate: today,
+      });
+    } catch (error) {
+      console.error("Error: ", error);
     }
   }
 
   return (
-    <div className="h-screen bg-gradient-to-r from-[#254D32] to-[#3A7D44]">
+    <div className="min-h-screen bg-gradient-to-r from-[#254D32] to-[#3A7D44]">
       <Sidebar page="Search" />
       <main className="flex-1 pl-70 pt-10">
         <div className="mx-50">
@@ -207,7 +217,7 @@ export default function ExercisePage() {
                           carbohydrates_total_g={food.carbohydrates_total_g}
                           fiber_g={food.fiber_g}
                           sugar_g={food.sugar_g}
-                          handleOnClick={() => handleFoodClick(food)}
+                          handleOnClick={(scaledFood) => handleFoodClick(scaledFood)}
                         />
                       ))}
                     </div>

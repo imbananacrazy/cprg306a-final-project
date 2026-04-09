@@ -1,18 +1,22 @@
+"use client";
+
 import { useState } from "react";
 
-//api provides the name, the target muscle, instructions, and the difficulty of the exercise.
-//we are only taking the name and difficulty. this card will be shown in the "Manage Exercises" page.
+//only storing name and difficulty from the api
+//handleOnClick gets passed from the parent to handle the remove
 interface Props {
   name: string;
   difficulty: string;
+  handleOnClick: () => void;
 }
 
-export default function ExerciseCard({ name, difficulty }: Props) {
+export default function ExerciseCard({ name, difficulty, handleOnClick }: Props) {
   const [hovered, setHovered] = useState(false);
 
   return (
     <button
       className="group relative w-full bg-white border-[#254D32] p-5 rounded-lg flex flex-col gap-4 border transition-all hover:cursor-pointer hover:bg-red-400 text-black hover:border-transparent active:scale-[0.99] overflow-hidden"
+      onClick={handleOnClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

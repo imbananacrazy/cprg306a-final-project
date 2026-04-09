@@ -6,71 +6,102 @@ import { useRouter } from "next/navigation";
 import { useUserAuth } from "@/utils/firebase/auth-context";
 import ExerciseCard from "@/components/exercise/exercise-card";
 import { db } from "@/utils/firebase/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 interface ExerciseData {
   name: string;
   difficulty: string;
 }
 
-//displays exercises the user has set for each day of the week. fetches all exercises under "exerciseSchedule" and puts them
-//into useState arrays depending on the day they are under using the interface above since each exercise only stores those pieces of data.
-export default function ExercisePage() {
+// Single state object to hold all 7 days instead of 7 separate useState calls.
+// This makes it much easier to update one day without touching the others.
+interface ExerciseSchedule {
+  monday: ExerciseData[];
+  tuesday: ExerciseData[];
+  wednesday: ExerciseData[];
+  thursday: ExerciseData[];
+  friday: ExerciseData[];
+  saturday: ExerciseData[];
+  sunday: ExerciseData[];
+}
+
+const DAYS: (keyof ExerciseSchedule)[] = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+];
+
+// Capitalizes first letter for display
+function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// Default empty schedule used as the initial state
+const EMPTY_SCHEDULE: ExerciseSchedule = {
+  monday: [],
+  tuesday: [],
+  wednesday: [],
+  thursday: [],
+  friday: [],
+  saturday: [],
+  sunday: [],
+};
+
+// Displays exercises the user has set for each day of the week.
+// Each exercise card has a remove button that deletes it from Firestore.
+export default function ManageExercisesPage() {
   const router = useRouter();
   const { user, loading } = useUserAuth();
-  const [mondayExercises, setMondayExercises] = useState<ExerciseData[]>([]);
-  const [tuesdayExercises, setTuesdayExercises] = useState<ExerciseData[]>([]);
-  const [wednesdayExercises, setWednesdayExercises] = useState<ExerciseData[]>(
-    [],
-  );
-  const [thursdayExercises, setThursdayExercises] = useState<ExerciseData[]>(
-    [],
-  );
-  const [fridayExercises, setFridayExercises] = useState<ExerciseData[]>([]);
-  const [saturdayExercises, setSaturdayExercises] = useState<ExerciseData[]>(
-    [],
-  );
-  const [sundayExercises, setSundayExercises] = useState<ExerciseData[]>([]);
+  const [schedule, setSchedule] = useState<ExerciseSchedule>(EMPTY_SCHEDULE);
 
-  //if not signed in, redirect to landing page
+  // If not signed in, redirect to landing page
   useEffect(() => {
     if (!loading && !user) router.push("/");
 
-    //fetch all exercises from the "exerciseSchedule" field in the "users" collection. exerciseSchedule is an array of maps that hold
-    //name and difficulty
-    //ex:
-    //    monday:
-    //      0:
-    //        name: "lift1"
-    //        difficulty: intermediate
-    //      1:
-    //        name: "lift2"
-    //        difficulty: beginner
-    //    tuesday:
-    //      0:
-    //        name: "lift 1"
-    //        difficulty: beginner
-    //    etc...
+    // Fetch the full exerciseSchedule from Firestore
     async function fetchExercises() {
       if (user?.uid) {
         const userData = await getDoc(doc(db, "users", user.uid));
         if (userData.exists()) {
           const data = userData.data();
-          setMondayExercises(data.exerciseSchedule.monday || []);
-          setTuesdayExercises(data.exerciseSchedule.tuesday || []);
-          setWednesdayExercises(data.exerciseSchedule.wednesday || []);
-          setThursdayExercises(data.exerciseSchedule.thursday || []);
-          setFridayExercises(data.exerciseSchedule.friday || []);
-          setSaturdayExercises(data.exerciseSchedule.saturday || []);
-          setSundayExercises(data.exerciseSchedule.sunday || []);
+          setSchedule({
+            monday: data.exerciseSchedule?.monday || [],
+            tuesday: data.exerciseSchedule?.tuesday || [],
+            wednesday: data.exerciseSchedule?.wednesday || [],
+            thursday: data.exerciseSchedule?.thursday || [],
+            friday: data.exerciseSchedule?.friday || [],
+            saturday: data.exerciseSchedule?.saturday || [],
+            sunday: data.exerciseSchedule?.sunday || [],
+          });
         }
       }
     }
     fetchExercises();
   }, [user, loading, router]);
 
-  //if page is loading (usually really quick), say that its loading. otherwise if not loading and user is
-  //signed in, load the manage exercises page.
+  // Removes one exercise from a specific day by index.
+  // Builds a new array for that day, updates state immediately, then saves to Firestore.
+  async function removeExercise(
+    day: keyof ExerciseSchedule,
+    indexToRemove: number
+  ) {
+    if (!user?.uid) return;
+
+    const updatedDay = schedule[day].filter((_, i) => i !== indexToRemove);
+    const newSchedule = { ...schedule, [day]: updatedDay };
+
+    setSchedule(newSchedule); // update UI immediately
+
+    await updateDoc(doc(db, "users", user.uid), {
+      exerciseSchedule: newSchedule,
+    });
+  }
+
+  // Loading state
   if (loading)
     return (
       <div className="bg-[#111827] h-screen w-full flex items-center justify-center text-white">
@@ -79,9 +110,9 @@ export default function ExercisePage() {
     );
 
   return (
-    <div className="h-screen bg-gradient-to-r from-[#254D32] to-[#3A7D44]">
+    <div className="min-h-screen bg-gradient-to-r from-[#254D32] to-[#3A7D44]">
       <Sidebar page="Manage Exercises" />
-      <main className="flex-1 pl-70 pt-10">
+      <main className="flex-1 pl-70 pt-10 pb-10">
         <div className="mx-50">
           <div className="flex flex-col gap-2">
             <header>
@@ -90,81 +121,33 @@ export default function ExercisePage() {
                   Manage Exercises
                 </h1>
                 <p className="text-white font-medium">
-                  View and manage the exercises set for the week.
+                  View and manage the exercises set for the week. Click a card
+                  to remove it.
                 </p>
               </div>
             </header>
-            <div className="flex flex-col gap-5">
-              <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-bold text-white">Monday</h1>
-                {mondayExercises.map((exercise, index) => (
-                  <ExerciseCard
-                    key={index}
-                    name={exercise.name}
-                    difficulty={exercise.difficulty}
-                  />
-                ))}
-              </div>
-              <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-bold text-white">Tuesday</h1>
-                {tuesdayExercises.map((exercise, index) => (
-                  <ExerciseCard
-                    key={index}
-                    name={exercise.name}
-                    difficulty={exercise.difficulty}
-                  />
-                ))}
-              </div>
-              <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-bold text-white">Wednesday</h1>
-                {wednesdayExercises.map((exercise, index) => (
-                  <ExerciseCard
-                    key={index}
-                    name={exercise.name}
-                    difficulty={exercise.difficulty}
-                  />
-                ))}
-              </div>
-              <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-bold text-white">Thursday</h1>
-                {thursdayExercises.map((exercise, index) => (
-                  <ExerciseCard
-                    key={index}
-                    name={exercise.name}
-                    difficulty={exercise.difficulty}
-                  />
-                ))}
-              </div>
-              <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-bold text-white">Friday</h1>
-                {fridayExercises.map((exercise, index) => (
-                  <ExerciseCard
-                    key={index}
-                    name={exercise.name}
-                    difficulty={exercise.difficulty}
-                  />
-                ))}
-              </div>
-              <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-bold text-white">Saturday</h1>
-                {saturdayExercises.map((exercise, index) => (
-                  <ExerciseCard
-                    key={index}
-                    name={exercise.name}
-                    difficulty={exercise.difficulty}
-                  />
-                ))}
-              </div>
-              <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-bold text-white">Sunday</h1>
-                {sundayExercises.map((exercise, index) => (
-                  <ExerciseCard
-                    key={index}
-                    name={exercise.name}
-                    difficulty={exercise.difficulty}
-                  />
-                ))}
-              </div>
+            <div className="flex flex-col gap-6 pt-6">
+              {DAYS.map((day) => (
+                <div key={day} className="flex flex-col gap-2">
+                  <h2 className="text-2xl font-bold text-white">
+                    {capitalize(day)}
+                  </h2>
+                  {schedule[day].length > 0 ? (
+                    schedule[day].map((exercise, index) => (
+                      <ExerciseCard
+                        key={index}
+                        name={exercise.name}
+                        difficulty={exercise.difficulty}
+                        handleOnClick={() => removeExercise(day, index)}
+                      />
+                    ))
+                  ) : (
+                    <p className="text-green-200 text-sm font-medium pl-1">
+                      No exercises yet — search to add some.
+                    </p>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>

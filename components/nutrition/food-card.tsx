@@ -1,7 +1,9 @@
+"use client";
+
 import { useState } from "react";
 
-//api provides all information. all these datatypes are here because food api doesn't have ids for each food,
-// so this keeps track exactly the food and all its data. this card will be shown in the "Manage Nutrition" page.
+//food api doesnt have ids so we store every value to keep track of it
+//handleOnClick gets passed from the parent to handle the remove
 interface Props {
   name: string;
   calories: number;
@@ -15,6 +17,7 @@ interface Props {
   carbohydrates_total_g: number;
   fiber_g: number;
   sugar_g: number;
+  handleOnClick: () => void;
 }
 
 export default function FoodCard({
@@ -30,11 +33,13 @@ export default function FoodCard({
   carbohydrates_total_g,
   fiber_g,
   sugar_g,
+  handleOnClick,
 }: Props) {
   const [hovered, setHovered] = useState(false);
   return (
     <button
       className="group relative bg-white border-[#254D32] p-5 rounded-lg flex flex-col gap-3 border hover:cursor-pointer hover:bg-red-400 hover:text-white hover:border-transparent transition-all w-full overflow-hidden"
+      onClick={handleOnClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

@@ -4,10 +4,13 @@
 import { useContext, createContext, useState, useEffect } from "react";
 import {
   signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
   GoogleAuthProvider,
   GithubAuthProvider,
+  updateProfile,
 } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -18,10 +21,12 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  async function createUserDocument(user) {
+  async function createUserDocument(user, displayNameOverride) {
     if (!user) return;
 
     const userRef = doc(db, "users", user.uid);
+    const resolvedDisplayName =
+      displayNameOverride || user.displayName || user.email?.split("@")[0] || "";
 
     // Add user to "users" collection and create default data if user doesn't exist.
     // default data includes daily goals, achievements, food (their food data for the day), and their exercise schedule.
@@ -30,7 +35,7 @@ export const AuthContextProvider = ({ children }) => {
       await setDoc(userRef, {
         uid: user.uid,
         email: user.email,
-        displayName: user.displayName,
+        displayName: resolvedDisplayName,
         dailyGoals: {
           calories: 1500,
           protein: 100,
@@ -62,10 +67,11 @@ export const AuthContextProvider = ({ children }) => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      await createUserDocument(result.user);
+      await createUserDocument(result.user, result.user.displayName);
       return result;
     } catch (error) {
       console.error("Google Sign In Error:", error);
+      throw error;
     }
   };
 
@@ -73,10 +79,36 @@ export const AuthContextProvider = ({ children }) => {
     const provider = new GithubAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      await createUserDocument(result.user);
+      await createUserDocument(result.user, result.user.displayName);
       return result;
     } catch (error) {
       console.error("Github Sign In Error:", error);
+      throw error;
+    }
+  };
+
+  const emailPasswordSignIn = async (email, password) => {
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      await createUserDocument(result.user);
+      return result;
+    } catch (error) {
+      console.error("Email Sign In Error:", error);
+      throw error;
+    }
+  };
+
+  const emailPasswordSignUp = async (displayName, email, password) => {
+    const resolvedDisplayName = displayName?.trim() || email.split("@")[0];
+
+    try {
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(result.user, { displayName: resolvedDisplayName });
+      await createUserDocument(result.user, resolvedDisplayName);
+      return result;
+    } catch (error) {
+      console.error("Email Sign Up Error:", error);
+      throw error;
     }
   };
 
@@ -100,6 +132,8 @@ export const AuthContextProvider = ({ children }) => {
         loading,
         googleSignIn,
         githubSignIn,
+        emailPasswordSignIn,
+        emailPasswordSignUp,
         firebaseSignOut,
       }}
     >
